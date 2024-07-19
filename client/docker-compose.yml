@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis
+    container_name: my-redis
+    ports:
+      - "6379:6379"
+
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8001:8000"
+
+  cerebellum_server:
+    image: public.ecr.aws/q8e0a8z0/cerebellum_server_dev:latest
+    container_name: cerebellum_server
+    depends_on:
+      - redis
+      - dynamodb-local
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - REDIS_ENDPOINT_ADDRESS=localhost
+      - REDIS_ENDPOINT_PORT=6379
+      - DYNAMODB_MESSAGES_TABLE_NAME=messages
+      - DYNAMODB_CHANNELS_TABLE_NAME=channels
+      - API_KEY=sample_key

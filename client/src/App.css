@@ -1,0 +1,200 @@
+/* App.css */
+body {
+  font-family: sans-serif;
+  background: hsla(313, 60%, 33%, 1);
+
+  background: radial-gradient(
+    circle,
+    hsla(313, 60%, 33%, 1) 0%,
+    hsla(256, 89%, 18%, 1) 57%,
+    hsla(267, 79%, 20%, 1) 100%
+  );
+
+  background: -moz-radial-gradient(
+    circle,
+    hsla(313, 60%, 33%, 1) 0%,
+    hsla(256, 89%, 18%, 1) 57%,
+    hsla(267, 79%, 20%, 1) 100%
+  );
+
+  background: -webkit-radial-gradient(
+    circle,
+    hsla(313, 60%, 33%, 1) 0%,
+    hsla(256, 89%, 18%, 1) 57%,
+    hsla(267, 79%, 20%, 1) 100%
+  );
+
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#852170", endColorstr="#1B0557", GradientType=1 );
+  margin: 0;
+}
+
+.header {
+  color: white;
+  background-color: transparent;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  display: flex;
+  padding: 0%;
+}
+
+.top-bar {
+  max-width: 1152px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.logo {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.logo-text {
+  font-size: 24px;
+}
+
+.container-wrapper {
+  display: grid;
+  place-items: center;
+  min-height: 90vh;
+  margin-top: 10px;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+form {
+  margin-bottom: 10px;
+}
+
+form input[type="text"],
+form button {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form input[type="text"] {
+  width: calc(100% - 80px);
+  margin-right: 10px;
+}
+
+form button {
+  background-color: #1b0557;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #2a0f75;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  max-height: 80vh;
+  overflow-y: auto;
+  height: 400px;
+}
+
+ul li {
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+p {
+  margin-top: 0;
+}
+
+p.welcome {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.channel-info {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.join-channel {
+  display: flex;
+}
+
+.channel-info-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.send {
+  display: flex;
+}
+
+.queue {
+  border-top: solid #f0f0f0 1px;
+}
+
+.userName {
+  display: flex;
+}
+
+.message-display {
+  display: flex;
+  gap: 10px;
+}
+
+.presence-container {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+}
+
+.presence-header {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  justify-content: end;
+}
+
+.presence-header p {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.presence-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.presence-item {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  padding: 10px;
+}
