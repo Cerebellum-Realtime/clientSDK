@@ -1,9 +1,8 @@
 import { io } from "socket.io-client";
 
-
 let URL;
 if (process.env.NODE_ENV === "development") {
-  URL = "localhost:8000";
+  URL = "localhost:8001";
 } else {
   URL = import.meta.env.VITE_LOAD_BALANCER_ENDPOINT; // does this need the protocol in front of it?
 }
