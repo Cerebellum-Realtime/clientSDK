@@ -5,11 +5,13 @@ const usePresence = (channelName, initialUserInfo) => {
   const [currentPresence] = useState(channelName);
   const [presenceData, setPresenceData] = useState([]);
   const userInfoRef = useRef(initialUserInfo);
+  const previousPresenceRef = useRef(channelName);
 
   useEffect(() => {
     if (!currentPresence) {
       return;
     }
+    const previousPresence = previousPresenceRef.current;
 
     const handlePresenceLeave = (socketId) => {
       setPresenceData((prevData) =>
@@ -33,7 +35,6 @@ const usePresence = (channelName, initialUserInfo) => {
       if (ack.success === true) {
         setPresenceData(ack.users);
 
-        // Enter user into presence set
         socket.emit("presenceSet:enter", currentPresence, userInfoRef.current);
       }
     };
@@ -54,13 +55,13 @@ const usePresence = (channelName, initialUserInfo) => {
     //When user disconnects he is unsubscribed on the backend, so we need to resubscribe him
 
     return () => {
-      socket.emit("presenceSet:leave", currentPresence);
-      socket.emit(`presence:unsubscribe`, currentPresence);
+      socket.emit("presenceSet:leave", previousPresence);
+      socket.emit(`presence:unsubscribe`, previousPresence);
       socket.off("connect", handleSocketConnect);
 
-      socket.off(`presence:${currentPresence}:leave`, handlePresenceLeave);
-      socket.off(`presence:${currentPresence}:join`, handlePresenceJoin);
-      socket.off(`presence:${currentPresence}:update`, handlePresenceUpdate);
+      socket.off(`presence:${previousPresence}:leave`, handlePresenceLeave);
+      socket.off(`presence:${previousPresence}:join`, handlePresenceJoin);
+      socket.off(`presence:${previousPresence}:update`, handlePresenceUpdate);
     };
   }, [currentPresence]);
 
@@ -70,7 +71,7 @@ const usePresence = (channelName, initialUserInfo) => {
       socket.emit("presence:update", currentPresence, userInfoRef.current);
     },
     [currentPresence]
-  ); // Memoize based on currentPresence
+  );
 
   return { presenceData, updatePresenceInfo };
 };

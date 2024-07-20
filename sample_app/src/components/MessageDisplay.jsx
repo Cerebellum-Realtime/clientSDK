@@ -14,16 +14,11 @@ const MessageDisplay = ({
   toggleChangeUser,
 }) => {
   const [messages, setMessages] = useState([]);
-  const { presenceData, updatePresenceInfo } = usePresence(currentChannel, {
-    user,
-  });
+  const { presenceData, updatePresenceInfo } = usePresence(currentChannel);
 
-  const handleMessage = (data) => {
-    console.log(data);
-    setMessages((prevMessages) => prevMessages.concat(data));
-  };
-
-  const { queue } = useChannel(currentChannel, setMessages, handleMessage);
+  const { queue } = useChannel(currentChannel, (message) =>
+    setMessages((prevMessages) => prevMessages.concat(message))
+  );
 
   const handleLeaveChannel = (event) => {
     event.preventDefault();
@@ -36,6 +31,7 @@ const MessageDisplay = ({
     updatePresenceInfo({ user: newUserName });
   };
 
+  console.log(presenceData);
   return (
     <>
       <div className="message-display">
