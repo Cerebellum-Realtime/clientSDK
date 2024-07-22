@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { socket } from "../socket";
+import { cerebellum } from "../socket";
 
 const usePresence = (channelName, initialUserInfo) => {
   const [currentPresence] = useState(channelName);
@@ -31,44 +31,44 @@ const usePresence = (channelName, initialUserInfo) => {
       );
     };
 
-    const handlePresenceSubscribe = (ack) => {
-      if (ack.success === true) {
-        setPresenceData(ack.users);
+    const handleSocketConnect = async () => {
+      await cerebellum.getPresenceSetMembers(currentPresence, setPresenceData);
 
-        socket.emit("presenceSet:enter", currentPresence, userInfoRef.current);
-      }
+      cerebellum.enterPresenceSet(currentPresence, userInfoRef.current);
     };
 
-    socket.on(`presence:${currentPresence}:leave`, handlePresenceLeave);
-    socket.on(`presence:${currentPresence}:join`, handlePresenceJoin);
-    socket.on(`presence:${currentPresence}:update`, handlePresenceUpdate);
-
-    const handleSocketConnect = () => {
-      socket.emit(
-        "presence:subscribe",
-        currentPresence,
-        handlePresenceSubscribe
-      );
-    };
     handleSocketConnect();
-    socket.on("connect", handleSocketConnect);
-    //When user disconnects he is unsubscribed on the backend, so we need to resubscribe him
+    cerebellum.on("connect", handleSocketConnect);
+    cerebellum.subscribeToPresenceJoins(currentPresence, handlePresenceJoin);
+    cerebellum.subscribeToPresenceUpdates(
+      currentPresence,
+      handlePresenceUpdate
+    );
+    cerebellum.subscribeToPresenceLeaves(currentPresence, handlePresenceLeave);
 
     return () => {
-      socket.emit("presenceSet:leave", previousPresence);
-      socket.emit(`presence:unsubscribe`, previousPresence);
-      socket.off("connect", handleSocketConnect);
+      cerebellum.leavePresenceSet(previousPresence);
+      cerebellum.off("connect", handleSocketConnect);
 
-      socket.off(`presence:${previousPresence}:leave`, handlePresenceLeave);
-      socket.off(`presence:${previousPresence}:join`, handlePresenceJoin);
-      socket.off(`presence:${previousPresence}:update`, handlePresenceUpdate);
+      cerebellum.unsubscribeFromPresenceJoins(
+        previousPresence,
+        handlePresenceJoin
+      );
+      cerebellum.unsubscribeFromPresenceLeaves(
+        previousPresence,
+        handlePresenceLeave
+      );
+      cerebellum.unsubscribeFromPresenceUpdates(
+        previousPresence,
+        handlePresenceUpdate
+      );
     };
   }, [currentPresence]);
 
   const updatePresenceInfo = useCallback(
     (updatedUserInfo) => {
       userInfoRef.current = { ...userInfoRef.current, ...updatedUserInfo };
-      socket.emit("presence:update", currentPresence, userInfoRef.current);
+      cerebellum.updatePresenceInfo(currentPresence, userInfoRef.current);
     },
     [currentPresence]
   );

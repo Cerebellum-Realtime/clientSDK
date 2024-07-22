@@ -19,10 +19,6 @@ const SendQueueForm = ({ user, queue }) => {
     };
   }, []);
 
-  useEffect(() => {
-    updatePresenceInfo({ user });
-  }, [user, updatePresenceInfo]);
-
   useEffect(() => {}, [presenceData]);
   const sendMessage = (event) => {
     event.preventDefault();
@@ -44,7 +40,9 @@ const SendQueueForm = ({ user, queue }) => {
       updatePresenceInfo({ typing: false });
     }, 1000);
   };
-  
+
+  console.log(presenceData);
+
   return (
     <div className="queue">
       <h3>Send thru Queue</h3>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { socket } from "./socket";
+// import { socket } from "./socket";
+import { cerebellum } from "./socket";
 import "./App.css";
 import Username from "./components/Username";
 import Channel from "./components/Channel";
@@ -12,27 +13,20 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      socket.on("connect_error", (reason) => {
-        console.log("Connection error:", reason.message);
-        if (reason.message === "Authentication error") {
-          socket.disconnect();
-          setUser(null);
-        }
-      });
-
-      socket.connect();
-      socket.on("recovery:enable", () => {
+      cerebellum.authErrorCallback(() => setUser(null));
+      cerebellum.connect();
+      cerebellum.on("recovery:enable", () => {
         console.log("recovery has been enabled");
       });
 
-      socket.on("disconnect", (reason) => {
+      cerebellum.on("disconnect", (reason) => {
         console.log(`Disconnected: ${reason}`);
       });
     }
 
     return () => {
-      socket.off("disconnect");
-      socket.off("recovery:enabled");
+      cerebellum.off("disconnect");
+      cerebellum.off("recovery:enabled");
     };
   }, [user]);
 

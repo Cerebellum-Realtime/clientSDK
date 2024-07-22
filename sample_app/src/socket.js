@@ -1,4 +1,4 @@
-import { io } from "socket.io-client";
+import { Cerebellum } from "../../Cerebellum/cerebellum.js";
 
 let URL;
 if (process.env.NODE_ENV === "development") {
@@ -7,9 +7,24 @@ if (process.env.NODE_ENV === "development") {
   URL = import.meta.env.VITE_LOAD_BALANCER_ENDPOINT; // does this need the protocol in front of it?
 }
 
-export const socket = io(URL, {
+// const cerebellum = await Cerebellum(URL, {
+//   autoConnect: true,
+//   authEndpoint: "http://localhost:3000/login",
+//   authMethod: "POST",
+//   reconnection: true, // Enable reconnection attempts
+//   reconnectionAttempts: 5, // Number of attempts before giving up
+//   reconnectionDelay: 5000, // Delay between reconnection
+//   reconnectionDelayMax: 5000, // Maximum delay between reconnection
+//   timeout: 20000, // Before a connection attempt is considered failed
+// });
+
+export const cerebellum = await Cerebellum(URL, {
   autoConnect: false,
-  auth: {}, // Token gets added in Username component
+  authRoute: {
+    endpoint: "http://localhost:3000/login",
+    method: "POST",
+    payload: {},
+  },
   reconnection: true, // Enable reconnection attempts
   reconnectionAttempts: 5, // Number of attempts before giving up
   reconnectionDelay: 5000, // Delay between reconnection

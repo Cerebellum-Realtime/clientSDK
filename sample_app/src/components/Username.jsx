@@ -1,6 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
-import { socket } from "../socket";
+import { cerebellum } from "../socket";
 
 /* eslint-disable react/prop-types */
 const Username = ({ toggleUsernameSubmit }) => {
@@ -9,12 +8,7 @@ const Username = ({ toggleUsernameSubmit }) => {
   const handleUsernameSubmit = async (event) => {
     event.preventDefault();
 
-    const { data } = await axios.post("/login", {
-      username,
-    });
-
-    socket.auth.token = data;
-
+    await cerebellum.auth("http://localhost:3000/login", "POST");
     toggleUsernameSubmit(username);
   };
 

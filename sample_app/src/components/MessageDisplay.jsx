@@ -14,12 +14,13 @@ const MessageDisplay = ({
   toggleChangeUser,
 }) => {
   const [messages, setMessages] = useState([]);
-  const { presenceData, updatePresenceInfo } = usePresence(currentChannel);
+  const { presenceData, updatePresenceInfo } = usePresence(currentChannel, {
+    user,
+  });
 
-  const { queue } = useChannel(currentChannel, (message) =>
+  const { publish } = useChannel(currentChannel, (message) =>
     setMessages((prevMessages) => prevMessages.concat(message))
   );
-
   const handleLeaveChannel = (event) => {
     event.preventDefault();
     setMessages([]);
@@ -31,7 +32,6 @@ const MessageDisplay = ({
     updatePresenceInfo({ user: newUserName });
   };
 
-  console.log(presenceData);
   return (
     <>
       <div className="message-display">
@@ -44,7 +44,7 @@ const MessageDisplay = ({
           </div>
           <></>
           <DisplayMessages messages={messages} />
-          <SendQueueForm user={user} queue={queue} />
+          <SendQueueForm user={user} queue={publish} />
           <ChangeUserName user={user} toggleChangeUser={handleChangeUser} />
         </div>
         <OnlineUserPresence presenceData={presenceData} />
