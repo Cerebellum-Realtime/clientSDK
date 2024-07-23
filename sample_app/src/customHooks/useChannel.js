@@ -4,6 +4,8 @@ import { cerebellum } from "../socket";
 const useChannel = (channelName, callback) => {
   const callbackRef = useRef(callback);
   const [currentChannel, setCurrentChannel] = useState(channelName);
+  const [currentLastEvaluatedKey, setCurrentLastEvaluatedKey] =
+    useState(undefined);
   const previousChannelRef = useRef(channelName);
 
   useEffect(() => {
@@ -18,7 +20,16 @@ const useChannel = (channelName, callback) => {
     const previousChannel = previousChannelRef.current;
     const handleMessageReceive = callbackRef.current;
 
-    cerebellum.subscribeChannel(currentChannel, handleMessageReceive);
+    const fetchMessages = async () => {
+      const { messages, lastEvaluatedKey } = await cerebellum.getPastMessages(
+        currentChannel
+      );
+      setCurrentLastEvaluatedKey(lastEvaluatedKey);
+      handleMessageReceive(messages);
+      cerebellum.subscribeChannel(currentChannel, handleMessageReceive);
+    };
+
+    fetchMessages();
 
     return () => {
       cerebellum.unsubscribeChannel(previousChannel, handleMessageReceive);
@@ -40,7 +51,15 @@ const useChannel = (channelName, callback) => {
     setCurrentChannel(null);
   };
 
-  return { publish, subscribe, unsubscribe };
+  const getPastMessages = (limit = 50, sortDirection = "ascending") => {
+    return cerebellum.getPastMessages(currentChannel, {
+      limit,
+      sortDirection,
+      lastEvaluatedKey: currentLastEvaluatedKey,
+    });
+  };
+
+  return { publish, subscribe, unsubscribe, getPastMessages };
 };
 
 export default useChannel;

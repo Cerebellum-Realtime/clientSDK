@@ -89,14 +89,41 @@ class CerebellumInit {
       console.error("Error initializing connection: ", error);
     }
   }
+  getPastMessages(
+    channelName,
+    {
+      limit = 50,
+      sortDirection = "ascending",
+      lastEvaluatedKey = undefined,
+    } = {}
+  ) {
+    return new Promise((resolve, reject) => {
+      this.socket.emit(
+        "channel:history",
+        channelName,
+        limit,
+        sortDirection,
+        lastEvaluatedKey,
+        (ack) => {
+          if (ack.success === true && ack.pastMessages !== undefined) {
+            resolve({
+              messages: ack.pastMessages,
+              lastEvaluatedKey: ack.lastEvaluatedKey,
+            });
+          } else {
+            reject(new Error(`Failed to get messages from ${channelName}`));
+          }
+        }
+      );
+    });
+  }
 
   subscribeChannel(channelName, callback) {
     this.socket.emit("channel:subscribe", channelName, (ack) => {
       if (ack.success) {
-        callback(ack.pastMessages);
         this.socket.on(`message:receive:${channelName}`, callback);
       } else {
-        console.error(`Failed to subscribe to channel ${currentChannel}`);
+        console.error(`Failed to subscribe to channel ${channelName}`);
       }
     });
   }
@@ -110,7 +137,7 @@ class CerebellumInit {
         console.error(`Failed to unsubscribe from channel ${channelName}`);
       }
     });
-    socket.off(`message:receive:${channelName}`, callback);
+    this.socket.off(`message:receive:${channelName}`, callback);
   }
 
   publish(channelName, message) {
