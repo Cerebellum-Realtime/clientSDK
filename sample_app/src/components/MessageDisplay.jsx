@@ -18,9 +18,9 @@ const MessageDisplay = ({
     user,
   });
 
-  const { publish } = useChannel(currentChannel, (message) =>
-    setMessages((prevMessages) => prevMessages.concat(message))
-  );
+  const { publish } = useChannel(currentChannel, (message) => {
+    setMessages((prevMessages) => prevMessages.concat(message));
+  });
   const handleLeaveChannel = (event) => {
     event.preventDefault();
     setMessages([]);

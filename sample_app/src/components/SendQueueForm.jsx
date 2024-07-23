@@ -41,8 +41,6 @@ const SendQueueForm = ({ user, queue }) => {
     }, 1000);
   };
 
-  console.log(presenceData);
-
   return (
     <div className="queue">
       <h3>Send thru Queue</h3>
