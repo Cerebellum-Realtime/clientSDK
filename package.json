@@ -1,14 +1,33 @@
 {
-  "name": "client",
+  "name": "@cerebellum/sdk",
   "version": "1.0.0",
-  "main": "index.js",
+  "module": "dist/cerebellum-sdk.js",
+  "types": "dist/cerebellum-sdk.d.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "remove-dist": "rm -rf dist",
+    "build": "npm run remove-dist && tsc -p tsconfig.json"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.7.2",
     "socket.io-client": "^4.7.5"
+  },
+  "bin": {
+    "cerebellum-start": "dist/scripts/start-services.js",
+    "cerebellum-stop": "dist/scripts/stops-service.js"
+  },
+  "files": [
+    "dist",
+    "docker-compose.yml",
+    "scripts"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.14.11",
+    "@types/react": "^18.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }
