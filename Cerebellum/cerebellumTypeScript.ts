@@ -102,7 +102,7 @@ class CerebellumInit {
     try {
       const token = await fetchSignedToken(authEndpoint, method, payload);
 
-      this.socket.auth["token"] = token; // does this work?
+      this.socket.auth["token"] = token;
     } catch (error) {
       console.error("Error initializing connection: ", error);
     }
@@ -126,19 +126,23 @@ class CerebellumInit {
     );
   }
 
-  unsubscribeChannel(channelName, callback) {
-    this.socket.emit(`channel:unsubscribe`, channelName, (ack) => {
-      if (ack.success) {
-        callback();
-        console.log(`Unsubscribed from channel ${channelName}`);
-      } else {
-        console.error(`Failed to unsubscribe from channel ${channelName}`);
+  unsubscribeChannel(channelName: string, callback: () => any) {
+    this.socket.emit(
+      `channel:unsubscribe`,
+      channelName,
+      (ack: Acknowledgement) => {
+        if (ack.success) {
+          callback();
+          console.log(`Unsubscribed from channel ${channelName}`);
+        } else {
+          console.error(`Failed to unsubscribe from channel ${channelName}`);
+        }
       }
-    });
+    );
     this.socket.off(`message:receive:${channelName}`, callback);
   }
 
-  publish(channelName, message) {
+  publish(channelName: string, message: string) {
     this.socket.emit("message:queue", channelName, message);
   }
 
