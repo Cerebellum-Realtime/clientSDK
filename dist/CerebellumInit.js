@@ -78,7 +78,6 @@ export class CerebellumInit {
     unsubscribeChannel(channelName, callback) {
         this.socket.emit(`channel:unsubscribe`, channelName, (ack) => {
             if (ack.success) {
-                callback();
                 console.log(`Unsubscribed from channel ${channelName}`);
             }
             else {

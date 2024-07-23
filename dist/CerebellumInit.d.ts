@@ -13,11 +13,11 @@ export declare class CerebellumInit {
     auth(authEndpoint: string, method: ("GET" | "POST") | undefined, payload: Payload): Promise<void>;
     getPastMessages(channelName: string, { limit, sortDirection, lastEvaluatedKey, }?: getPastMessagesOptions): Promise<PastMessages>;
     subscribeChannel(channelName: string, callback: (pastMessages: Message[]) => any): void;
-    unsubscribeChannel(channelName: string, callback: () => any): void;
+    unsubscribeChannel(channelName: string, callback: (messages: Message[]) => any): void;
     publish(channelName: string, message: string): void;
     enterPresenceSet(channelName: string, state: State): void;
     leavePresenceSet(channelName: string): void;
-    getPresenceSetMembers(channelName: string): Promise<unknown>;
+    getPresenceSetMembers(channelName: string): Promise<State[]>;
     subscribeToPresenceJoins(channelName: string, callback: (state: State) => any): void;
     subscribeToPresenceUpdates(channelName: string, callback: (state: State) => any): void;
     subscribeToPresenceLeaves(channelName: string, callback: (state: State) => any): void;

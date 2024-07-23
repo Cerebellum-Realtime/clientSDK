@@ -54,4 +54,5 @@ export {
   PastMessages,
   Payload,
   State,
+  LastEvaluatedKey,
 };

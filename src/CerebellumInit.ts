@@ -124,13 +124,15 @@ export class CerebellumInit {
     );
   }
 
-  unsubscribeChannel(channelName: string, callback: () => any) {
+  unsubscribeChannel(
+    channelName: string,
+    callback: (messages: Message[]) => any
+  ) {
     this.socket.emit(
       `channel:unsubscribe`,
       channelName,
       (ack: Acknowledgement) => {
         if (ack.success) {
-          callback();
           console.log(`Unsubscribed from channel ${channelName}`);
         } else {
           console.error(`Failed to unsubscribe from channel ${channelName}`);
@@ -154,7 +156,7 @@ export class CerebellumInit {
   }
 
   //Get the current members in the presence set
-  getPresenceSetMembers(channelName: string) {
+  getPresenceSetMembers(channelName: string): Promise<State[]> {
     return new Promise((resolve, reject) => {
       this.socket.emit(
         "presence:members:get",

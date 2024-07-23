@@ -1,12 +1,12 @@
 {
-  "name": "cerebellum-client",
-  "version": "1.0.4",
-  "main": "dist/cerebellum.js",
-  "module": "dist/cerebellum.js",
-  "types": "dist/cerebellum.d.ts",
+  "name": "@cerebellum/sdk",
+  "version": "1.0.0",
+  "module": "dist/cerebellum-sdk.js",
+  "types": "dist/cerebellum-sdk.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "remove-dist": "rm -rf dist",
+    "build": "npm run remove-dist && tsc -p tsconfig.json"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +17,7 @@
   },
   "bin": {
     "cerebellum-start": "dist/scripts/start-services.js",
-    "cerebellum-stop": "dist/scripts/stop-services.js"
+    "cerebellum-stop": "dist/scripts/stops-service.js"
   },
   "files": [
     "dist",
@@ -26,6 +26,7 @@
   ],
   "devDependencies": {
     "@types/node": "^20.14.11",
+    "@types/react": "^18.3.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   }

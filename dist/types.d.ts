@@ -36,4 +36,4 @@ interface AuthRoute {
 interface CerebellumOptions extends Partial<ManagerOptions & SocketOptions> {
     authRoute?: AuthRoute;
 }
-export { CerebellumOptions, Message, Acknowledgement, getPastMessagesOptions, PastMessages, Payload, State, };
+export { CerebellumOptions, Message, Acknowledgement, getPastMessagesOptions, PastMessages, Payload, State, LastEvaluatedKey, };
