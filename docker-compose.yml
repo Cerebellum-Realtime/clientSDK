@@ -14,7 +14,7 @@ services:
       - "8000:8000"
 
   Cerebellum:
-    image: public.ecr.aws/q8e0a8z0/cerebellum_server_dev:latest
+    image: willconrad/cerebellum:server
     container_name: Cerebellum
     ports:
       - "8001:8001"
