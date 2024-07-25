@@ -1,6 +1,6 @@
 import { SocketOptions, ManagerOptions } from "socket.io-client";
 interface Message {
-    content: string;
+    content: any;
     createdAt: string;
 }
 interface LastEvaluatedKey extends Message {

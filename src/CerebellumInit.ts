@@ -9,6 +9,7 @@ import {
 } from "./types";
 import { io, Socket } from "socket.io-client";
 import { fetchSignedToken } from "./utils/fetchSignedToken";
+import jwt from "jsonwebtoken";
 
 export class CerebellumInit {
   socket: Socket;
@@ -16,6 +17,15 @@ export class CerebellumInit {
   constructor(endpoint: string, options: CerebellumOptions) {
     this.socket = io(endpoint, options);
     this.init();
+  }
+
+  // DO NOT USE IN PRODUCTION
+  createToken(apiKey: string, payload: object) {
+    const token = jwt.sign(payload, apiKey, { expiresIn: "1m" });
+    
+    if (typeof this.socket.auth === "object" && this.socket.auth !== null) {
+      this.socket.auth.token = token;
+    }
   }
 
   init() {
@@ -109,7 +119,7 @@ export class CerebellumInit {
 
   subscribeChannel(
     channelName: string,
-    callback: (pastMessages: Message[]) => any
+    callback: (pastMessages: Message) => any
   ) {
     this.socket.emit(
       "channel:subscribe",
@@ -126,7 +136,7 @@ export class CerebellumInit {
 
   unsubscribeChannel(
     channelName: string,
-    callback: (messages: Message[]) => any
+    callback: (messages: Message) => any
   ) {
     this.socket.emit(
       `channel:unsubscribe`,
@@ -134,15 +144,15 @@ export class CerebellumInit {
       (ack: Acknowledgement) => {
         if (ack.success) {
           console.log(`Unsubscribed from channel ${channelName}`);
+          this.socket.off(`message:receive:${channelName}`, callback);
         } else {
           console.error(`Failed to unsubscribe from channel ${channelName}`);
         }
       }
     );
-    this.socket.off(`message:receive:${channelName}`, callback);
   }
 
-  publish(channelName: string, message: string) {
+  publish(channelName: string, message: any) {
     this.socket.emit("message:queue", channelName, message);
   }
 

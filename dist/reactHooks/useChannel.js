@@ -13,13 +13,7 @@ export const useChannel = (cerebellum, channelName, callback) => {
         }
         const previousChannel = previousChannelRef.current;
         const handleMessageReceive = callbackRef.current;
-        const fetchMessages = async () => {
-            const { messages, lastEvaluatedKey } = await cerebellum.getPastMessages(currentChannel);
-            setCurrentLastEvaluatedKey(lastEvaluatedKey);
-            handleMessageReceive(messages);
-            cerebellum.subscribeChannel(currentChannel, handleMessageReceive);
-        };
-        fetchMessages();
+        cerebellum.subscribeChannel(currentChannel, handleMessageReceive);
         return () => {
             cerebellum.unsubscribeChannel(previousChannel, handleMessageReceive);
         };
@@ -39,11 +33,13 @@ export const useChannel = (cerebellum, channelName, callback) => {
         if (!currentChannel)
             throw new Error("No channel selected");
         try {
-            return await cerebellum.getPastMessages(currentChannel, {
+            const { messages, lastEvaluatedKey } = await cerebellum.getPastMessages(currentChannel, {
                 limit,
                 sortDirection,
                 lastEvaluatedKey: currentLastEvaluatedKey,
             });
+            setCurrentLastEvaluatedKey(lastEvaluatedKey);
+            return messages;
         }
         catch (error) {
             console.error(error);
