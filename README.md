@@ -8,6 +8,7 @@
   - [Installation](#installation)
   - [Local Development Setup](#local-development-setup)
   - [Getting Started](#getting-started)
+  - [React](#react)
   - [Cerebellum Options](#cerebellum-options)
     - [`autoConnect`](#autoconnect)
     - [`API_KEY`](#api_key)
@@ -20,6 +21,16 @@
   - [Properties](#properties)
     - [`socketId`](#socketid)
   - [Methods](#methods)
+    - [General Methods](#general-methods)
+      - [`on`](#on)
+      - [`off`](#off)
+      - [`connect`](#connect)
+      - [`disconnect`](#disconnect)
+      - [`createToken`](#createtoken)
+      - [`auth`](#auth)
+      - [`setToken`](#settoken)
+      - [`getSocket`](#getsocket)
+      - [`authErrorCallback`](#autherrorcallback)
     - [Channel Methods](#channel-methods)
       - [`subscribeChannel`](#subscribechannel)
       - [`unsubscribeChannel`](#unsubscribechannel)
@@ -45,6 +56,8 @@ The Cerebellum SDK is a powerful library that simplifies real-time communication
 - Presence management for user status tracking
 - Historical message retrieval
 - Full TypeScript support
+- Ready-to-use React hooks for streamlined development
+
 
 This SDK is designed to help developers quickly implement robust real-time features in their applications without dealing with the complexities of WebSocket management and real-time data synchronization.
 
@@ -108,6 +121,10 @@ For development, you can use the options above to connect to the local developme
 In production, replace the URL with your Cerebellum server URL and use a secure API key or auth route.
 
 Once an instance of Cerebellum has been created, you can use the various hooks and components provided by the Cerebellum SDK to interact with the Cerebellum server.
+
+## React
+
+
 
 ## Cerebellum Options
 
@@ -267,6 +284,296 @@ cerebellum.on("connection", (socket) => {
 ## Methods
 
 Once an instance of `Cerebellum` has been created, you can interact with it using various methods provided by the. Below is a detailed description of each method, including the types of arguments they take, their return types, and example usage.
+
+### General Methods
+
+The general methods in the Cerebellum SDK provide a way to interact with the Cerebellum server and manage the connection to the server. These methods include methods for connecting to the server, disconnecting from it, and retrieving the socket ID.
+
+#### `on`
+
+```typescript
+on(event: string, callback: (...args: any) => any): void
+```
+
+**Description**
+
+Subscribes to a specific event emitted by the server. The provided callback function will be executed whenever the event is triggered.
+
+**Arguments**
+
+- **`event: string`**
+  - **Description**: The `event` parameter is a string that represents the name of the event to listen for. It is used to specify the type of event to listen for.
+- **`callback: (...args: any) => any`**
+  - **Description**: The `callback` parameter is a function that takes any number of arguments of any type and returns a value of any type. It is used to handle the event triggered by the `on` method.
+
+**Example**
+
+```typescript
+cerebellum.on("connection", (socket) => {
+  console.log("Connected with socket ID:", cerebellum.socketId);
+});
+```
+
+**Explanation**
+
+- In this example, the `on` method is used to listen for the "connection" event on the `cerebellum` instance. When the event is triggered, the provided callback function is executed with the socket object as an argument.
+
+---
+
+#### `off`
+
+```typescript
+off(event: string, callback: (...args: any) => any): void
+```
+
+**Description**
+
+Removes a callback function from listening to a specific event on the Cerebellum instance. The provided callback function will no longer be executed when the event is triggered.
+
+**Arguments**
+
+- **`event: string`**
+  - **Description**: The `event` parameter is a string that represents the name of the event to remove the callback function from. It is used to specify the type of event to remove the callback function from.
+- **`callback: (...args: any) => any`**
+  - **Description**: The `callback` parameter is a function that takes any number of arguments of any type and returns a value of any type. It is used to remove the callback function from the event listener.
+
+**Example**
+
+```typescript
+cerebellum.off("connection", (socket) => {
+  console.log("Disconnected with socket ID:", cerebellum.socketId);
+});
+```
+
+**Explanation**
+
+- In this example, the `off` method is used to remove the callback function for the "connection" event on the `cerebellum` instance. When the event is triggered, the provided callback function will no longer be executed.
+
+---
+
+#### `connect`
+
+```typescript
+connect(): void
+```
+
+**Description**
+
+Establishes a connection to the Cerebellum server. This method is used to connect to the Cerebellum server and establish a WebSocket connection.
+
+**Example**
+
+```typescript
+cerebellum.connect();
+```
+
+**Explanation**
+
+- In this example, the `connect` method is called to establish a connection to the Cerebellum server.
+
+---
+
+#### `disconnect`
+
+```typescript
+disconnect(): void
+```
+
+**Description**
+
+This method is used to disconnect from the Cerebellum server and close the WebSocket connection.
+
+**Example**
+
+```typescript
+cerebellum.disconnect();
+```
+
+**Explanation**
+
+- In this example, the `disconnect` method is called to disconnect from the Cerebellum server.
+
+---
+
+#### `createToken`
+
+```typescript
+createToken(apiKey: string, payload: JWTPayload): Promise<void>
+```
+
+**Description**
+
+This method is used to create a JWT token using an API key and a payload. The token is then used to authenticate with the Cerebellum server.
+
+**DO NOT NUSE THIS METHOD IN THE FRONT END CODE IN PRODUCTION**
+
+If this meethod is used in the front end code in production, your API key will be exposed to the client-side code. This is a security risk.
+
+**Arguments**
+
+- **`apiKey: string`**
+  - **Description**: The `apiKey` parameter is a string that represents the API key used for authentication. It is used to create the JWT token.
+- **`payload: JWTPayload`**
+  - **Description**: The `payload` parameter is an object that represents the data to be included in the JWT token. It is used to create the JWT token.
+
+**Return Type**
+
+- **`Promise<void>`**
+  - **Description**: The `createToken` method returns a Promise that resolves when the token is created. If the token creation is successful, the Promise resolves. If there is an error, the Promise rejects with an error message.
+
+**Example**
+
+```typescript
+const payload = {
+  userId: "123",
+  roles: ["admin"],
+};
+
+cerebellum
+  .createToken("API_KEY", payload)
+  .then(() => {
+    console.log("Token created successfully");
+  })
+  .catch((error) => {
+    console.error("Error creating token:", error);
+  });
+```
+
+**Explanation**
+
+- In this example, the `createToken` method is called with the API key "API_KEY" and the payload object. The method returns a Promise that resolves when the token is created. If the token creation is successful, the Promise resolves. If there is an error, the Promise rejects with an error message.
+
+---
+
+#### `auth`
+
+```typescript
+auth(
+  authEndpoint: string,
+  method: "GET" | "POST" = "POST",
+  payload?: object
+): Promise<void>
+```
+
+**Description**
+
+This method is used to have cerebellum retrieve a a signed Token from an authentication endpoint. The returned token is saved to the cerebellum instance and can be used to authenticate with the Cerebellum server. When `cerebellum.connect()` is called, the saved token will be used to authenticate with the Cerebellum server.
+
+**Arguments**
+
+- **`authEndpoint: string`**
+  - **Description**: The `authEndpoint` parameter is a string that represents the endpoint URL where the authentication request will be sent. It is used to specify the endpoint where the authentication request will be sent.
+- **`method: "GET" | "POST" = "POST"`**
+  - **Description**: The `method` parameter is a string that represents the HTTP method to be used for the authentication request. It is used to specify the HTTP method to be used for the authentication request. It can be either "GET" or "POST", with a default value of "POST" if not provided.
+- **`payload?: object`**
+  - **Description**: The `payload` parameter is an optional object that represents the data to be sent along with the authentication request. It is used to specify the data to be sent along with the authentication request.
+
+**Return Type**
+
+- **`Promise<void>`**
+  - **Description**: The `auth` method returns a Promise that resolves when the authentication request is successful. If the authentication request is successful, the Promise resolves. If there is an error, the Promise rejects with an error message.
+
+**Example**
+
+```typescript
+cerebellum
+  .auth("https://example.com/login", "POST", {
+    username: "user1",
+    password: "password123",
+  })
+  .then(() => {
+    console.log("Authentication successful");
+  })
+  .catch((error) => {
+    console.error("Error authenticating:", error);
+  });
+```
+
+**Explanation**
+
+- In this example, the `auth` method is called with the endpoint URL "https://example.com/login", the HTTP method "POST", and the payload object. The method returns a Promise that resolves when the authentication request is successful. If the authentication request is successful, the Promise resolves. If there is an error, the Promise rejects with an error message.
+
+---
+
+#### `setToken`
+
+```typescript
+setToken(token: string): void
+```
+
+**Description**
+
+This method is used to set the token for authentication in the Cerebellum instance. This token will be used to authenticate with the Cerebellum server when `cerebellum.connect()` is called.
+
+This method is used if you would like to manually set the token for authentication in the Cerebellum instance, instead of using the `auth` method.
+
+**Arguments**
+
+- **`token: string`**
+  - **Description**: The `token` parameter is a string that represents the authentication token that will be set for the socket connection. It is used to set the token for authentication.
+
+**Example**
+
+```typescript
+cerebellum.setToken("TOKEN");
+```
+
+**Explanation**
+
+- In this example, the `setToken` method is called with the token "TOKEN". The method sets the token for authentication in the `cerebellum` instance. This token will be used to authenticate with the Cerebellum server when `cerebellum.connect()` is called
+
+---
+
+#### `getSocket`
+
+```typescript
+getSocket(): Socket
+```
+
+**Description**
+
+This method returns the socket object associated with the Cerebellum instance. This socket object can be used to interact with the Cerebellum server directly. This socket is the same socket used by `socket.io` to communicate with the Cerebellum server. This is useful if you need to perform additional operations with the socket.io library, that are not provided by the Cerebellum SDK.
+
+**Example**
+
+```typescript
+const socket = cerebellum.getSocket();
+```
+
+**Explanation**
+
+- In this example, the `getSocket` method is called to retrieve the socket object associated with the `cerebellum` instance. The returned socket object can be used to interact with the Cerebellum server directly.
+
+---
+
+#### `authErrorCallback`
+
+```typescript
+authErrorCallback(callback: (...args: any) => any): void
+```
+
+**Description**
+
+This method is used to handle authentication errors in the Cerebellum instance. If the authentication with the Cerebellum server fails, the provided callback function will be called with the error message.
+
+**Arguments**
+
+- **`callback: (...args: any) => any`**
+  - **Description**: The `callback` parameter is a function that takes any number of arguments of any type and returns a value of any type. It is used to handle the authentication error. The function is called when the "connect_error" event is triggered on the socket object.
+
+**Example**
+
+```typescript
+cerebellum.authErrorCallback((error) => {
+  console.error("Authentication error:", error);
+});
+```
+
+**Explanation**
+
+- In this example, the `authErrorCallback` method is called when authentication fails with the cerebellum serever.
+
+---
 
 ### Channel Methods
 
