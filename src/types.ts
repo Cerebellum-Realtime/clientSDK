@@ -3,6 +3,7 @@ import { SocketOptions, ManagerOptions } from "socket.io-client";
 interface Message {
   content: any;
   createdAt: string;
+  socketId: string;
 }
 
 interface LastEvaluatedKey extends Message {

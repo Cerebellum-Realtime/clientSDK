@@ -1,6 +1,6 @@
 {
   "name": "@cerebellum/sdk",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "module": "dist/cerebellum-sdk.js",
   "types": "dist/cerebellum-sdk.d.ts",
   "type": "module",
@@ -13,7 +13,7 @@
   "description": "",
   "dependencies": {
     "axios": "^1.7.2",
-    "jsonwebtoken": "^9.0.2",
+    "jose": "^5.6.3",
     "socket.io-client": "^4.7.5"
   },
   "bin": {

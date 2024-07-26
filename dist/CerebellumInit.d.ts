@@ -1,8 +1,10 @@
-import { CerebellumOptions, Message, getPastMessagesOptions, PastMessages, Payload, State } from "./types";
+import { CerebellumOptions, Message, getPastMessagesOptions, PastMessages, Payload, State } from "./types.js";
 import { Socket } from "socket.io-client";
+import { JWTPayload } from "jose";
 export declare class CerebellumInit {
     socket: Socket;
     constructor(endpoint: string, options: CerebellumOptions);
+    createToken(apiKey: string, payload: JWTPayload): Promise<void>;
     init(): void;
     on(event: string, callback: (...args: any) => any): void;
     authErrorCallback(callback: (...args: any) => any): void;
@@ -12,7 +14,7 @@ export declare class CerebellumInit {
     off(event: string, callback: (...args: any) => any): void;
     auth(authEndpoint: string, method: ("GET" | "POST") | undefined, payload: Payload): Promise<void>;
     getPastMessages(channelName: string, { limit, sortDirection, lastEvaluatedKey, }?: getPastMessagesOptions): Promise<PastMessages>;
-    subscribeChannel(channelName: string, callback: (pastMessages: Message) => any): void;
+    subscribeChannel(channelName: string, callback?: (pastMessages: Message) => any): void;
     unsubscribeChannel(channelName: string, callback: (messages: Message) => any): void;
     publish(channelName: string, message: any): void;
     enterPresenceSet(channelName: string, state: State): void;

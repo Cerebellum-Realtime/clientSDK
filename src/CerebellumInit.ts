@@ -6,10 +6,10 @@ import {
   PastMessages,
   Payload,
   State,
-} from "./types";
+} from "./types.js";
 import { io, Socket } from "socket.io-client";
-import { fetchSignedToken } from "./utils/fetchSignedToken";
-import jwt from "jsonwebtoken";
+import { fetchSignedToken } from "./utils/fetchSignedToken.js";
+import { JWTPayload, SignJWT } from "jose";
 
 export class CerebellumInit {
   socket: Socket;
@@ -19,12 +19,14 @@ export class CerebellumInit {
     this.init();
   }
 
-  // DO NOT USE IN PRODUCTION
-  createToken(apiKey: string, payload: object) {
-    const token = jwt.sign(payload, apiKey, { expiresIn: "1m" });
-    
-    if (typeof this.socket.auth === "object" && this.socket.auth !== null) {
-      this.socket.auth.token = token;
+  async createToken(apiKey: string, payload: JWTPayload) {
+    const textEncode = new TextEncoder().encode(apiKey);
+    if (apiKey) {
+      if (typeof this.socket.auth === "object" && this.socket.auth !== null) {
+        this.socket.auth.token = await new SignJWT(payload)
+          .setExpirationTime("1m")
+          .sign(textEncode);
+      }
     }
   }
 
@@ -104,6 +106,7 @@ export class CerebellumInit {
         sortDirection,
         lastEvaluatedKey,
         (ack: Acknowledgement) => {
+          console.log(ack);
           if (ack.success === true && ack.pastMessages !== undefined) {
             resolve({
               messages: ack.pastMessages,
@@ -119,14 +122,16 @@ export class CerebellumInit {
 
   subscribeChannel(
     channelName: string,
-    callback: (pastMessages: Message) => any
+    callback?: (pastMessages: Message) => any
   ) {
     this.socket.emit(
       "channel:subscribe",
       channelName,
       (ack: Acknowledgement) => {
         if (ack.success) {
-          this.socket.on(`message:receive:${channelName}`, callback);
+          if (callback) {
+            this.socket.on(`message:receive:${channelName}`, callback);
+          }
         } else {
           console.error(`Failed to subscribe to channel ${channelName}`);
         }

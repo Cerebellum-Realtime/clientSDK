@@ -1,9 +1,22 @@
 import { io } from "socket.io-client";
-import { fetchSignedToken } from "./utils/fetchSignedToken";
+import { fetchSignedToken } from "./utils/fetchSignedToken.js";
+import { SignJWT } from "jose";
 export class CerebellumInit {
+    socket;
     constructor(endpoint, options) {
         this.socket = io(endpoint, options);
         this.init();
+    }
+    // DO NOT USE IN PRODUCTION
+    async createToken(apiKey, payload) {
+        const textEncode = new TextEncoder().encode(apiKey);
+        if (apiKey) {
+            if (typeof this.socket.auth === "object" && this.socket.auth !== null) {
+                this.socket.auth.token = await new SignJWT(payload)
+                    .setExpirationTime("1m")
+                    .sign(textEncode);
+            }
+        }
     }
     init() {
         this.addAuthErrorListener;
@@ -53,6 +66,7 @@ export class CerebellumInit {
     getPastMessages(channelName, { limit = 50, sortDirection = "ascending", lastEvaluatedKey = undefined, } = {}) {
         return new Promise((resolve, reject) => {
             this.socket.emit("channel:history", channelName, limit, sortDirection, lastEvaluatedKey, (ack) => {
+                console.log(ack);
                 if (ack.success === true && ack.pastMessages !== undefined) {
                     resolve({
                         messages: ack.pastMessages,
@@ -68,7 +82,9 @@ export class CerebellumInit {
     subscribeChannel(channelName, callback) {
         this.socket.emit("channel:subscribe", channelName, (ack) => {
             if (ack.success) {
-                this.socket.on(`message:receive:${channelName}`, callback);
+                if (callback) {
+                    this.socket.on(`message:receive:${channelName}`, callback);
+                }
             }
             else {
                 console.error(`Failed to subscribe to channel ${channelName}`);

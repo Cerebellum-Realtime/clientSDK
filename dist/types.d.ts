@@ -34,6 +34,7 @@ interface AuthRoute {
     payload: Payload;
 }
 interface CerebellumOptions extends Partial<ManagerOptions & SocketOptions> {
+    API_KEY?: string;
     authRoute?: AuthRoute;
 }
 export { CerebellumOptions, Message, Acknowledgement, getPastMessagesOptions, PastMessages, Payload, State, LastEvaluatedKey, };

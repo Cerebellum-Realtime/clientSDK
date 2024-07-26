@@ -1,7 +1,7 @@
-import { CerebellumOptions } from "./types";
-import { CerebellumInit } from "./CerebellumInit";
-import { initializeConnection } from "./utils/initializeConnection";
-import { createTokenFromApiKey } from "./utils/createTokenFromApiKey";
+import { CerebellumOptions } from "./types.js";
+import { CerebellumInit } from "./CerebellumInit.js";
+import { initializeConnection } from "./utils/initializeConnection.js";
+import { createTokenFromApiKey } from "./utils/createTokenFromApiKey.js";
 
 export const Cerebellum = async (
   endpoint: string,

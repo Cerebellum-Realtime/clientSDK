@@ -1,14 +1,16 @@
-import { CerebellumInit } from "./CerebellumInit";
-import { initializeConnection } from "./utils/initializeConnection";
+import { CerebellumInit } from "./CerebellumInit.js";
+import { initializeConnection } from "./utils/initializeConnection.js";
+import { createTokenFromApiKey } from "./utils/createTokenFromApiKey.js";
 export const Cerebellum = async (endpoint, options) => {
     options.auth = {};
-    if (options.hasOwnProperty("autoConnect") && options.autoConnect === false) {
+    if (options.hasOwnProperty("API_KEY")) {
+        createTokenFromApiKey(options);
         return new CerebellumInit(endpoint, options);
     }
-    else {
+    if (options.hasOwnProperty("autoConnect") && options.autoConnect === true) {
         await initializeConnection(options);
-        return new CerebellumInit(endpoint, options);
     }
+    return new CerebellumInit(endpoint, options);
 };
 export default Cerebellum;
 //# sourceMappingURL=cerebellum.js.map
