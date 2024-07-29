@@ -1,4 +1,4 @@
-import { State } from "../../types.js";
+import { NewState, State } from "../../types.js";
 /**
  * The `usePresence` function in TypeScript manages presence data for a given channel using cerebellum
  *  and provides methods to update presence information.
@@ -13,8 +13,8 @@ import { State } from "../../types.js";
  * 2. `updatePresenceInfo`: A function that allows updating the presence information by passing in a
  * new `State` object.
  */
-export declare const usePresence: (channelName: string, initialUserInfo: State) => {
+export declare const usePresence: (channelName: string, initialUserInfo: NewState) => {
     presenceData: State[];
-    updatePresenceInfo: (updatedUserInfo: State) => void;
+    updatePresenceInfo: (updatedUserInfo: NewState) => void;
 };
 export default usePresence;

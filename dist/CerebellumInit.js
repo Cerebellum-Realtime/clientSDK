@@ -44,7 +44,6 @@ export class CerebellumInit {
     init() {
         this.addAuthErrorListener();
         this.socket.on("connect", () => {
-            console.log("Connected with socket ID:");
             this.socketId = this.socket.id;
         });
     }
@@ -217,7 +216,6 @@ export class CerebellumInit {
     unsubscribeChannel(channelName, callback) {
         this.socket.emit(`channel:unsubscribe`, channelName, (ack) => {
             if (ack.success) {
-                console.log(`Unsubscribed from channel ${channelName}`);
                 this.socket.off(`message:receive:${channelName}`, callback);
             }
             else {

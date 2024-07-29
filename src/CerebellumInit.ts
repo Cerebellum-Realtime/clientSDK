@@ -62,7 +62,6 @@ export class CerebellumInit {
   init() {
     this.addAuthErrorListener();
     this.socket.on("connect", () => {
-      console.log("Connected with socket ID:");
       this.socketId = this.socket.id;
     });
   }
@@ -277,7 +276,6 @@ cerebellum server. It is called when the `connect` method is called on the cereb
       channelName,
       (ack: Acknowledgement) => {
         if (ack.success) {
-          console.log(`Unsubscribed from channel ${channelName}`);
           this.socket.off(`message:receive:${channelName}`, callback);
         } else {
           console.error(`Failed to unsubscribe from channel ${channelName}`);

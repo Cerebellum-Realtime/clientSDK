@@ -1,4 +1,4 @@
-import { CerebellumOptions, Message, getPastMessagesOptions, PastMessages, Payload, State } from "./types.js";
+import { CerebellumOptions, Message, getPastMessagesOptions, PastMessages, Payload, State, NewState } from "./types.js";
 import { Socket } from "socket.io-client";
 import { JWTPayload } from "jose";
 export declare class CerebellumInit {
@@ -149,7 +149,7 @@ export declare class CerebellumInit {
      * communicated when entering the channel.
      * @return {void} - This function does not return a value.
      */
-    enterPresenceSet(channelName: string, state: State): void;
+    enterPresenceSet(channelName: string, state: NewState): void;
     /**
      * The function `leavePresenceSet` emits a message to leave a presence channel. Users subscribed to presence
      * leave events will be notified when a user leaves the channel.
@@ -249,7 +249,7 @@ export declare class CerebellumInit {
      * include details such as online/offline status, activity status, or any other relevant information
      * related to the presence of a user or entity in
      */
-    updatePresenceInfo(channelName: string, state: State): void;
+    updatePresenceInfo(channelName: string, state: NewState): void;
     /**
      * The `getSocket` function returns the socket object.
      * @returns The `socket` property of the current object is being returned.

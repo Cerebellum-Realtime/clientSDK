@@ -8,8 +8,11 @@ interface LastEvaluatedKey extends Message {
     channelName: string;
     messageId: string;
 }
-interface State {
+interface NewState {
     [key: string]: string;
+}
+interface State extends NewState {
+    socketId: string;
 }
 interface Acknowledgement {
     success: boolean;
@@ -27,7 +30,7 @@ interface PastMessages {
     lastEvaluatedKey?: LastEvaluatedKey;
 }
 interface Payload {
-    [key: string]: string | number | boolean;
+    [key: string]: any;
 }
 interface AuthRoute {
     endpoint: string;
@@ -38,4 +41,4 @@ interface CerebellumOptions extends Partial<ManagerOptions & SocketOptions> {
     API_KEY?: string;
     authRoute?: AuthRoute;
 }
-export { CerebellumOptions, Message, Acknowledgement, getPastMessagesOptions, PastMessages, Payload, State, LastEvaluatedKey, };
+export { CerebellumOptions, Message, Acknowledgement, getPastMessagesOptions, PastMessages, Payload, State, LastEvaluatedKey, NewState, };
