@@ -1,8 +1,9 @@
 import { SocketOptions, ManagerOptions } from "socket.io-client";
 
 interface Message {
-  content: string;
+  content: any;
   createdAt: string;
+  socketId: string;
 }
 
 interface LastEvaluatedKey extends Message {
@@ -10,8 +11,11 @@ interface LastEvaluatedKey extends Message {
   messageId: string;
 }
 
-interface State {
+interface NewState {
   [key: string]: string;
+}
+interface State extends NewState {
+  socketId: string;
 }
 
 interface Acknowledgement {
@@ -33,7 +37,7 @@ interface PastMessages {
 }
 
 interface Payload {
-  [key: string]: string | number | boolean;
+  [key: string]: any;
 }
 
 interface AuthRoute {
@@ -43,6 +47,7 @@ interface AuthRoute {
 }
 
 interface CerebellumOptions extends Partial<ManagerOptions & SocketOptions> {
+  API_KEY?: string;
   authRoute?: AuthRoute;
 }
 
@@ -55,4 +60,5 @@ export {
   Payload,
   State,
   LastEvaluatedKey,
+  NewState,
 };
