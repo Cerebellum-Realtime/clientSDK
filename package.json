@@ -1,6 +1,6 @@
 {
   "name": "@cerebellum/sdk",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "module": "dist/cerebellum-sdk.js",
   "types": "dist/cerebellum-sdk.d.ts",
   "type": "module",
@@ -30,6 +30,7 @@
     "@types/node": "^20.14.11",
     "@types/react": "^18.3.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.4"
   }
 }
