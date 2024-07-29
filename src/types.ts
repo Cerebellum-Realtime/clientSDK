@@ -11,8 +11,11 @@ interface LastEvaluatedKey extends Message {
   messageId: string;
 }
 
-interface State {
+interface NewState {
   [key: string]: string;
+}
+interface State extends NewState {
+  socketId: string;
 }
 
 interface Acknowledgement {
@@ -34,7 +37,7 @@ interface PastMessages {
 }
 
 interface Payload {
-  [key: string]: string | number | boolean;
+  [key: string]: any;
 }
 
 interface AuthRoute {
@@ -57,4 +60,5 @@ export {
   Payload,
   State,
   LastEvaluatedKey,
+  NewState,
 };

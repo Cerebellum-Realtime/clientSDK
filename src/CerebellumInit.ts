@@ -9,6 +9,7 @@ import {
   PastMessages,
   Payload,
   State,
+  NewState,
 } from "./types.js";
 import { io, Socket } from "socket.io-client";
 import { fetchSignedToken } from "./utils/fetchSignedToken.js";
@@ -16,11 +17,11 @@ import { JWTPayload, SignJWT } from "jose";
 
 export class CerebellumInit {
   socket: Socket;
-  socketId: String;
+  socketId: String | undefined;
 
   constructor(endpoint: string, options: CerebellumOptions) {
     this.socket = io(endpoint, options);
-    this.socketId = "socketId is not set";
+    this.socketId = "socketId is not set yet";
     this.init();
   }
 
@@ -59,9 +60,10 @@ export class CerebellumInit {
   }
 
   init() {
-    this.addAuthErrorListener;
-    this.on("connection", (socket) => {
-      this.socketId = socket.id;
+    this.addAuthErrorListener();
+    this.socket.on("connect", () => {
+      console.log("Connected with socket ID:");
+      this.socketId = this.socket.id;
     });
   }
 
@@ -307,7 +309,7 @@ cerebellum server. It is called when the `connect` method is called on the cereb
    * communicated when entering the channel.
    * @return {void} - This function does not return a value.
    */
-  enterPresenceSet(channelName: string, state: State) {
+  enterPresenceSet(channelName: string, state: NewState) {
     this.socket.emit("presenceSet:enter", channelName, state);
   }
 
@@ -392,15 +394,15 @@ cerebellum server. It is called when the `connect` method is called on the cereb
     this.socket.on(`presence:${channelName}:update`, callback);
   }
 
-/**
- * The function `subscribeToPresenceLeaves` subscribes to presence leave events on a specific channel
- * and executes a callback function when such events occur.
- * @param {string} channelName - The `channelName` parameter is a string that represents the name of
- * the channel to subscribe to for presence leave events.
- * @param callback - The `callback` parameter is a function that takes a `State` object as an argument
- * and returns any value. This function will be executed when a user leaves the presence channel
- * specified by `channelName`.
- */
+  /**
+   * The function `subscribeToPresenceLeaves` subscribes to presence leave events on a specific channel
+   * and executes a callback function when such events occur.
+   * @param {string} channelName - The `channelName` parameter is a string that represents the name of
+   * the channel to subscribe to for presence leave events.
+   * @param callback - The `callback` parameter is a function that takes a `State` object as an argument
+   * and returns any value. This function will be executed when a user leaves the presence channel
+   * specified by `channelName`.
+   */
   subscribeToPresenceLeaves(
     channelName: string,
     callback: (state: State) => any
@@ -408,15 +410,15 @@ cerebellum server. It is called when the `connect` method is called on the cereb
     this.socket.on(`presence:${channelName}:leave`, callback);
   }
 
-/**
- * This function unsubscribes a callback from receiving leave events on a presence channel in
- * TypeScript.
- * @param {string} channelName - The `channelName` parameter is a string that represents the name of
- * the channel from which you want to unsubscribe from presence leave events.
- * @param callback - The `callback` parameter is a function that was passed to the `subscribeToPresenceLeaves`
- * function and is used to remove the callback function for presence leave events.
- * @return {void} - This function does not return a value.
- */
+  /**
+   * This function unsubscribes a callback from receiving leave events on a presence channel in
+   * TypeScript.
+   * @param {string} channelName - The `channelName` parameter is a string that represents the name of
+   * the channel from which you want to unsubscribe from presence leave events.
+   * @param callback - The `callback` parameter is a function that was passed to the `subscribeToPresenceLeaves`
+   * function and is used to remove the callback function for presence leave events.
+   * @return {void} - This function does not return a value.
+   */
   unsubscribeFromPresenceLeaves(
     channelName: string,
     callback: (state: State) => any
@@ -424,15 +426,15 @@ cerebellum server. It is called when the `connect` method is called on the cereb
     this.socket.off(`presence:${channelName}:leave`, callback);
   }
 
-/**
- * This function unsubscribes a callback function from receiving presence join events on a specific
- * channel.
- * @param {string} channelName - The `channelName` parameter is a string that represents the name of
- * the channel from which you want to unsubscribe from presence joins.
- * @param callback - The `callback` parameter is a function that was passed to the `subscribeToPresenceJoins`
- * function and is used to remove the callback function for presence join events.
- * @return {void} - This function does not return a value.
- */
+  /**
+   * This function unsubscribes a callback function from receiving presence join events on a specific
+   * channel.
+   * @param {string} channelName - The `channelName` parameter is a string that represents the name of
+   * the channel from which you want to unsubscribe from presence joins.
+   * @param callback - The `callback` parameter is a function that was passed to the `subscribeToPresenceJoins`
+   * function and is used to remove the callback function for presence join events.
+   * @return {void} - This function does not return a value.
+   */
   unsubscribeFromPresenceJoins(
     channelName: string,
     callback: (state: State) => any
@@ -440,15 +442,15 @@ cerebellum server. It is called when the `connect` method is called on the cereb
     this.socket.off(`presence:${channelName}:join`, callback);
   }
 
-/**
- * The function `unsubscribeFromPresenceUpdates` removes a callback function from listening to presence
- * update events on a specific channel.
- * @param {string} channelName - The `channelName` parameter is a string that represents the name of
- * the channel from which you want to unsubscribe from presence updates.
- * @param callback - The `callback` parameter is a function that was passed to the `subscribeToPresenceUpdates`
- * function and is used to remove the callback function for presence updates.
- * @return {void} - This function does not return a value.
- */
+  /**
+   * The function `unsubscribeFromPresenceUpdates` removes a callback function from listening to presence
+   * update events on a specific channel.
+   * @param {string} channelName - The `channelName` parameter is a string that represents the name of
+   * the channel from which you want to unsubscribe from presence updates.
+   * @param callback - The `callback` parameter is a function that was passed to the `subscribeToPresenceUpdates`
+   * function and is used to remove the callback function for presence updates.
+   * @return {void} - This function does not return a value.
+   */
   unsubscribeFromPresenceUpdates(
     channelName: string,
     callback: (state: State) => any
@@ -456,24 +458,24 @@ cerebellum server. It is called when the `connect` method is called on the cereb
     this.socket.off(`presence:${channelName}:update`, callback);
   }
 
-/**
- * The function `updatePresenceInfo` emits a socket event to update the presence information for a
- * specific channel.
- * @param {string} channelName - The `channelName` parameter is a string that represents the name of
- * the channel for which you want to update the presence information.
- * @param {State} state - The `state` parameter in the `updatePresenceInfo` function likely represents
- * the current state or status information that you want to update for a specific channel. This could
- * include details such as online/offline status, activity status, or any other relevant information
- * related to the presence of a user or entity in
- */
-  updatePresenceInfo(channelName: string, state: State) {
+  /**
+   * The function `updatePresenceInfo` emits a socket event to update the presence information for a
+   * specific channel.
+   * @param {string} channelName - The `channelName` parameter is a string that represents the name of
+   * the channel for which you want to update the presence information.
+   * @param {State} state - The `state` parameter in the `updatePresenceInfo` function likely represents
+   * the current state or status information that you want to update for a specific channel. This could
+   * include details such as online/offline status, activity status, or any other relevant information
+   * related to the presence of a user or entity in
+   */
+  updatePresenceInfo(channelName: string, state: NewState) {
     this.socket.emit("presence:update", channelName, state);
   }
 
-/**
- * The `getSocket` function returns the socket object.
- * @returns The `socket` property of the current object is being returned.
- */
+  /**
+   * The `getSocket` function returns the socket object.
+   * @returns The `socket` property of the current object is being returned.
+   */
   getSocket() {
     return this.socket;
   }

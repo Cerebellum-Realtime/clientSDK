@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { State } from "../../types.js";
+import { NewState, State } from "../../types.js";
 import { CerebellumInit } from "../../CerebellumInit.js";
 import { useCerebellum } from "./useCerebellum.js";
 
@@ -17,10 +17,10 @@ import { useCerebellum } from "./useCerebellum.js";
  * 2. `updatePresenceInfo`: A function that allows updating the presence information by passing in a
  * new `State` object.
  */
-export const usePresence = (channelName: string, initialUserInfo: State) => {
+export const usePresence = (channelName: string, initialUserInfo: NewState) => {
   const currentPresenceRef = useRef<string | null>(channelName);
   const [presenceData, setPresenceData] = useState<State[]>([]);
-  const userInfoRef = useRef<State>(initialUserInfo);
+  const userInfoRef = useRef<NewState>(initialUserInfo);
   const cerebellum: CerebellumInit = useCerebellum();
 
   const handlePresenceLeave = useCallback((response: State) => {
@@ -96,7 +96,7 @@ export const usePresence = (channelName: string, initialUserInfo: State) => {
    * information is updated.
    */
   const updatePresenceInfo = useCallback(
-    (updatedUserInfo: State) => {
+    (updatedUserInfo: NewState) => {
       userInfoRef.current = { ...userInfoRef.current, ...updatedUserInfo };
       const currentPresence = currentPresenceRef.current;
       if (currentPresence) {

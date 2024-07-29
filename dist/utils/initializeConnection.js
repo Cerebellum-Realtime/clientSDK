@@ -1,4 +1,9 @@
 import { fetchSignedToken } from "./fetchSignedToken";
+/**
+ * The function `initializeConnection` in TypeScript initializes a connection by fetching a signed
+ * token using provided options.
+ * @param {CerebellumOptions} options - CerebellumOptions {
+ */
 export const initializeConnection = async (options) => {
     try {
         if (!options.authRoute)
