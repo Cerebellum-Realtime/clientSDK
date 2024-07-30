@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "remove-dist": "rm -rf dist",
-    "build": "npm run remove-dist && tsc -p tsconfig.json"
+    "build": "npm run remove-dist && tsc -p tsconfig.json",
+    "test": "vitest"
   },
   "author": "",
   "license": "ISC",
