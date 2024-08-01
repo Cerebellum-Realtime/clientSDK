@@ -207,7 +207,6 @@ cerebellum server. It is called when the `connect` method is called on the cereb
         sortDirection,
         lastEvaluatedKey,
         (ack: Acknowledgement) => {
-          console.log(ack);
           if (ack.success === true && ack.pastMessages !== undefined) {
             resolve({
               messages: ack.pastMessages,

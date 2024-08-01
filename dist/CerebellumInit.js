@@ -161,7 +161,6 @@ export class CerebellumInit {
     getPastMessages(channelName, { limit = 50, sortDirection = "ascending", lastEvaluatedKey = undefined, } = {}) {
         return new Promise((resolve, reject) => {
             this.socket.emit("channel:history", channelName, limit, sortDirection, lastEvaluatedKey, (ack) => {
-                console.log(ack);
                 if (ack.success === true && ack.pastMessages !== undefined) {
                     resolve({
                         messages: ack.pastMessages,
