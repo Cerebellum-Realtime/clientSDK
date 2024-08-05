@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - testing
+      - CI/CD
   pull_request:
     branches:
       - main
